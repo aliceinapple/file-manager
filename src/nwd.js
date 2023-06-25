@@ -1,12 +1,24 @@
 import fs from "fs";
 import path from "path";
+import {
+  resetStyle,
+  textColorGreen,
+  textColorYellow,
+  textItalic,
+  textUnderline,
+} from "./textStyles.js";
 
 export function getCurrentDirectory() {
   return path.resolve(process.cwd());
 }
 
 export function displayCurrentDirectory() {
-  console.log(`You are currently in ${getCurrentDirectory()}`);
+  console.log(
+    textColorYellow +
+      textItalic +
+      `You are currently in ${getCurrentDirectory()}` +
+      resetStyle
+  );
 }
 
 export function goUp() {
@@ -36,7 +48,6 @@ export function changeDirectory(directoryPath) {
 
 export function listDirectoryContents() {
   const currentDirectory = process.cwd();
-  console.log("You are currently in", currentDirectory);
 
   fs.readdir(currentDirectory, (err, files) => {
     if (err) {
@@ -47,8 +58,10 @@ export function listDirectoryContents() {
 
     const formattedFiles = files.map((file, index) => {
       const filePath = path.join(currentDirectory, file);
-      const fileType = fs.statSync(filePath).isDirectory() ? "Folder" : "File";
-      return { index: index + 1, name: file, type: fileType };
+      const fileType = fs.statSync(filePath).isDirectory()
+        ? "directory"
+        : "file";
+      return { index: index, name: file, type: fileType };
     });
 
     const maxLength = formattedFiles.reduce(
@@ -56,7 +69,14 @@ export function listDirectoryContents() {
       0
     );
 
-    console.log("Index\tName" + " ".repeat(maxLength - 3) + "\tType");
+    console.log(
+      textColorGreen +
+        textUnderline +
+        "Index\tName" +
+        " ".repeat(maxLength - 3) +
+        "\tType" +
+        resetStyle
+    );
 
     formattedFiles.forEach((file) => {
       const padding = " ".repeat(maxLength - file.name.length + 2);
