@@ -13,6 +13,8 @@ import {
   readFile,
   renameFile,
 } from "./fs.js";
+import { handleOSCommand } from "./os.js";
+import { calculateHash } from "./hash.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -66,6 +68,12 @@ function promptUser() {
       case "rm":
         deleteFile(options[0]);
         break;
+      case "os":
+        handleOSCommand(options);
+        break;
+      case "hash":
+        calculateHash(options[0]);
+        break;
       default:
         console.log("Invalid input");
     }
@@ -75,5 +83,3 @@ function promptUser() {
 }
 
 promptUser();
-
-export default promptUser;

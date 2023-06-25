@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import promptUser from "./index.js";
 
 export function getCurrentDirectory() {
   return path.resolve(process.cwd());
@@ -42,8 +41,6 @@ export function listDirectoryContents() {
   fs.readdir(currentDirectory, (err, files) => {
     if (err) {
       console.log("Operation failed", err);
-      promptUser();
-      return;
     }
 
     files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
@@ -65,7 +62,5 @@ export function listDirectoryContents() {
       const padding = " ".repeat(maxLength - file.name.length + 2);
       console.log(`${file.index}\t${file.name}${padding}\t${file.type}`);
     });
-
-    promptUser();
   });
 }
