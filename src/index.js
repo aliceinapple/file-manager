@@ -1,4 +1,3 @@
-import path from "path";
 import readline from "readline";
 import {
   changeDirectory,
@@ -6,6 +5,14 @@ import {
   goUp,
   listDirectoryContents,
 } from "./nwd.js";
+import {
+  copyFile,
+  createFile,
+  deleteFile,
+  moveFile,
+  readFile,
+  renameFile,
+} from "./fs.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -40,6 +47,24 @@ function promptUser() {
         break;
       case ".exit":
         exitProgram();
+        break;
+      case "cat":
+        readFile(options[0]);
+        break;
+      case "add":
+        createFile(options[0]);
+        break;
+      case "rn":
+        renameFile(options[0], options[1]);
+        break;
+      case "cp":
+        copyFile(options[0], options[1]);
+        break;
+      case "mv":
+        moveFile(options[0], options[1]);
+        break;
+      case "rm":
+        deleteFile(options[0]);
         break;
       default:
         console.log("Invalid input");
