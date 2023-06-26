@@ -1,39 +1,56 @@
 import fs from "fs";
+import { constants } from "fs";
 import zlib from "zlib";
+import { pipeline } from "stream/promises";
+import path from "path";
+import { resetStyle, textColorRed } from "./textStyles.js";
 
-export function compressFile(filePath, destinationPath) {
-  const input = fs.createReadStream(filePath);
-  const output = fs.createWriteStream(
-    destinationPath || filePath.split(".")[0] + ".br"
-  );
-  const compress = zlib.createBrotliCompress();
+export const compressFile = async (filePath, destinationPath) => {
+  try {
+    await fs.promises
+      .access(filePath, constants.F_OK)
+      .then()
+      .catch(() => {
+        throw new Error("No such file or directory");
+      });
 
-  input.pipe(compress).pipe(output);
-
-  output.on("finish", () => {
-    console.log(
-      `File ${filePath} compressed successfully to ${
-        destinationPath || filePath.split(".")[0]
-      }.br`
+    const input = fs.createReadStream(filePath);
+    const output = fs.createWriteStream(
+      destinationPath || filePath.split(".")[0] + ".br"
     );
-  });
+    const compress = zlib.createBrotliCompress();
 
-  output.on("error", (err) => {
-    console.log("Operation failed", err);
-  });
-}
+    await pipeline(input, compress, output);
+  } catch (error) {
+    console.log(
+      textColorRed + "Operation failed:" + error.message + resetStyle
+    );
+  }
+};
 
-export function decompressFile(sourceFilePath, destinationFilePath) {
-  const decompressedFileStream = fs.createWriteStream(destinationFilePath);
-  const fileStream = fs.createReadStream(sourceFilePath);
+export const decompressFile = async (sourceFilePath, destinationFilePath) => {
+  try {
+    await fs.promises
+      .access(sourceFilePath, constants.F_OK)
+      .then()
+      .catch(() => {
+        throw new Error("No such file or directory");
+      });
 
-  fileStream
-    .pipe(zlib.createBrotliDecompress())
-    .pipe(decompressedFileStream)
-    .on("finish", () => {
-      console.log("File decompressed successfully");
-    })
-    .on("error", (err) => {
-      console.error("Failed to decompress file");
-    });
-}
+    if (path.extname(sourceFilePath) !== ".br") {
+      throw new Error("This is not an archive!");
+    }
+
+    if (!destinationFilePath) throw new Error("Specify path to destination");
+
+    const input = fs.createReadStream(sourceFilePath);
+    const output = fs.createWriteStream(destinationFilePath);
+    const decompress = zlib.createBrotliDecompress();
+
+    await pipeline(input, decompress, output);
+  } catch (error) {
+    console.error(
+      textColorRed + "Operation failed:" + error.message + resetStyle
+    );
+  }
+};

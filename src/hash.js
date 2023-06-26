@@ -1,7 +1,8 @@
 import fs from "fs";
 import crypto from "crypto";
+import { resetStyle, textColorGreen, textColorRed } from "./textStyles.js";
 
-export function calculateHash(filePath) {
+export const calculateHash = (filePath) => {
   const hash = crypto.createHash("sha256");
 
   const fileStream = fs.createReadStream(filePath);
@@ -9,9 +10,9 @@ export function calculateHash(filePath) {
     hash.update(data);
   });
   fileStream.on("end", () => {
-    console.log("Hash:", hash.digest("hex"));
+    console.log(textColorGreen + "Hash:" + resetStyle, hash.digest("hex"));
   });
   fileStream.on("error", (err) => {
-    console.error("Failed to calculate hash");
+    console.error(textColorRed + "Failed to calculate hash" + resetStyle);
   });
-}
+};

@@ -1,32 +1,36 @@
 import os from "os";
+import { resetStyle, textColorGreen, textColorRed } from "./textStyles.js";
 
-function getEndOfLine() {
-  console.log("End of Line:", os.EOL);
-}
+const getEndOfLine = () => {
+  console.log(textColorGreen + "End of Line:" + resetStyle, os.EOL);
+};
 
-function getCPUsInfo() {
+const getCPUsInfo = () => {
   const cpus = os.cpus();
-  console.log("CPUs:");
+  console.log(textColorGreen + "CPUs:" + resetStyle);
   cpus.forEach((cpu, index) => {
     console.log(
       `CPU ${index + 1}: Model - ${cpu.model}, Speed - ${cpu.speed} GHz`
     );
   });
-}
+};
 
-function getHomeDirectory() {
-  console.log("Home Directory:", os.homedir());
-}
+const getHomeDirectory = () => {
+  console.log(textColorGreen + "Home Directory:" + resetStyle, os.homedir());
+};
 
-function getUsername() {
-  console.log("Username:", os.userInfo().username);
-}
+const getUsername = () => {
+  console.log(
+    textColorGreen + "Username:" + resetStyle,
+    os.userInfo().username
+  );
+};
 
-function getCPUArchitecture() {
-  console.log("CPU Architecture:", process.arch);
-}
+const getCPUArchitecture = () => {
+  console.log(textColorGreen + "CPU Architecture:" + resetStyle, process.arch);
+};
 
-export function handleOSCommand(options) {
+export const handleOSCommand = (options) => {
   const osCommand = options[0];
   switch (osCommand) {
     case "--EOL":
@@ -45,6 +49,6 @@ export function handleOSCommand(options) {
       getCPUArchitecture();
       break;
     default:
-      console.log("Invalid OS command");
+      console.log(textColorRed + "Invalid OS command" + resetStyle);
   }
-}
+};

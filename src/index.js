@@ -39,7 +39,7 @@ console.log(
     resetStyle
 );
 
-function exitProgram() {
+const exitProgram = () => {
   console.log(
     textColorBlue +
       textBold +
@@ -47,67 +47,77 @@ function exitProgram() {
       resetStyle
   );
   process.exit(0);
-}
+};
 
-function promptUser() {
+const promptUser = () => {
+  rl.prompt();
   displayCurrentDirectory();
-  rl.question(
-    textColorMagenta + textUnderline + "\nEnter a command:\n" + resetStyle,
-    (command) => {
-      const args = command.split(" ");
-      const operation = args[0];
-      const options = args.slice(1);
-
-      switch (operation) {
-        case "up":
-          goUp();
-          break;
-        case "cd":
-          changeDirectory(options[0]);
-          break;
-        case "ls":
-          listDirectoryContents();
-          break;
-        case ".exit":
-          exitProgram();
-          break;
-        case "cat":
-          readFile(options[0]);
-          break;
-        case "add":
-          createFile(options[0]);
-          break;
-        case "rn":
-          renameFile(options[0], options[1]);
-          break;
-        case "cp":
-          copyFile(options[0], options[1]);
-          break;
-        case "mv":
-          moveFile(options[0], options[1]);
-          break;
-        case "rm":
-          deleteFile(options[0]);
-          break;
-        case "os":
-          handleOSCommand(options);
-          break;
-        case "hash":
-          calculateHash(options[0]);
-          break;
-        case "compress":
-          compressFile(options[0], options[1]);
-          break;
-        case "decompress":
-          decompressFile(options[0], options[1]);
-          break;
-        default:
-          console.log(textColorRed + "Invalid input" + resetStyle);
-      }
-
-      promptUser();
-    }
+  console.log(
+    textUnderline + textColorMagenta + "Enter your code:" + resetStyle
   );
-}
+};
+
+const handleCommand = async (command) => {
+  const args = command.trim().split(" ");
+  const operation = args[0];
+  const options = args.slice(1);
+
+  switch (operation) {
+    case "up":
+      goUp();
+      break;
+    case "cd":
+      await changeDirectory(options[0]);
+      break;
+    case "ls":
+      await listDirectoryContents();
+      break;
+    case ".exit":
+      exitProgram();
+      break;
+    case "cat":
+      await readFile(options[0]);
+      break;
+    case "add":
+      await createFile(options[0]);
+      break;
+    case "rn":
+      await renameFile(options[0], options[1]);
+      break;
+    case "cp":
+      await copyFile(options[0], options[1]);
+      break;
+    case "mv":
+      await moveFile(options[0], options[1]);
+      break;
+    case "rm":
+      await deleteFile(options[0]);
+      break;
+    case "os":
+      handleOSCommand(options);
+      break;
+    case "hash":
+      calculateHash(options[0]);
+      break;
+    case "compress":
+      await compressFile(options[0], options[1]);
+      break;
+    case "decompress":
+      await decompressFile(options[0], options[1]);
+      break;
+    default:
+      console.log(textColorRed + "Invalid input" + resetStyle);
+  }
+
+  promptUser();
+};
+
+rl.on("line", async (command) => {
+  await handleCommand(command);
+});
+
+rl.on("SIGINT", () => {
+  exitProgram();
+});
 
 promptUser();

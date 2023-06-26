@@ -1,85 +1,78 @@
-import fs from "fs";
+import fs from "fs/promises";
 import path from "path";
 import { getCurrentDirectory } from "./nwd.js";
+import { resetStyle, textColorGreen, textColorRed } from "./textStyles.js";
 
-export function readFile(filePath) {
-  fs.createReadStream(filePath)
-    .on("data", (chunk) => {
-      console.log(chunk.toString());
-    })
-    .on("error", (err) => {
-      console.error("Failed to read file");
-    });
-}
+export const readFile = async (filePath) => {
+  try {
+    const fileContent = await fs.readFile(filePath, "utf8");
+    console.log(fileContent);
+  } catch (err) {
+    console.error(textColorRed + "Failed to read file" + resetStyle);
+  }
+};
 
-export function createFile(fileName) {
+export const createFile = async (fileName) => {
   const filePath = path.join(getCurrentDirectory(), fileName);
 
-  fs.writeFile(filePath, "", (err) => {
-    if (err) {
-      console.error("Failed to create file");
-    } else {
-      console.log("File created successfully");
-    }
-  });
-}
+  try {
+    await fs.writeFile(filePath, "");
+    console.log(textColorGreen + "File created successfully" + resetStyle);
+  } catch (err) {
+    console.error(textColorRed + "Failed to create file" + resetStyle);
+  }
+};
 
-export function renameFile(oldFilePath, newFileName) {
+export const renameFile = async (oldFilePath, newFileName) => {
   const newFilePath = path.join(getCurrentDirectory(), newFileName);
 
-  fs.rename(oldFilePath, newFilePath, (err) => {
-    if (err) {
-      console.error("Failed to rename file");
-    } else {
-      console.log("File renamed successfully");
-    }
-  });
-}
+  try {
+    await fs.rename(oldFilePath, newFilePath);
+    console.log(textColorGreen + "File renamed successfully" + resetStyle);
+  } catch (err) {
+    console.error(textColorRed + "Failed to rename file" + resetStyle);
+  }
+};
 
-export function copyFile(sourceFilePath, destinationDirectory) {
+export const copyFile = async (sourceFilePath, destinationDirectory) => {
   const destinationPath = path.join(
     getCurrentDirectory(),
     destinationDirectory
   );
 
-  fs.copyFile(
-    sourceFilePath,
-    path.join(destinationPath, path.basename(sourceFilePath)),
-    (err) => {
-      if (err) {
-        console.error("Failed to copy file");
-      } else {
-        console.log("File copied successfully");
-      }
-    }
-  );
-}
+  try {
+    await fs.copyFile(
+      sourceFilePath,
+      path.join(destinationPath, path.basename(sourceFilePath))
+    );
+    console.log(textColorGreen + "File copied successfully" + resetStyle);
+  } catch (err) {
+    console.error(textColorRed + "Failed to copy file" + resetStyle);
+  }
+};
 
-export function moveFile(sourceFilePath, destinationDirectory) {
+export const moveFile = async (sourceFilePath, destinationDirectory) => {
   const destinationPath = path.join(
     getCurrentDirectory(),
     destinationDirectory
   );
 
-  fs.rename(
-    sourceFilePath,
-    path.join(destinationPath, path.basename(sourceFilePath)),
-    (err) => {
-      if (err) {
-        console.error("Failed to move file");
-      } else {
-        console.log("File moved successfully");
-      }
-    }
-  );
-}
+  try {
+    await fs.rename(
+      sourceFilePath,
+      path.join(destinationPath, path.basename(sourceFilePath))
+    );
+    console.log(textColorGreen + "File moved successfully" + resetStyle);
+  } catch (err) {
+    console.error(textColorRed + "Failed to move file" + resetStyle);
+  }
+};
 
-export function deleteFile(filePath) {
-  fs.unlink(filePath, (err) => {
-    if (err) {
-      console.error("Failed to delete file");
-    } else {
-      console.log("File deleted successfully");
-    }
-  });
-}
+export const deleteFile = async (filePath) => {
+  try {
+    await fs.unlink(filePath);
+    console.log(textColorGreen + "File deleted successfully" + resetStyle);
+  } catch (err) {
+    console.error(textColorRed + "Failed to delete file" + resetStyle);
+  }
+};
