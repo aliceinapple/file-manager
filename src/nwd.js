@@ -32,10 +32,9 @@ export const goUp = () => {
 };
 
 export const changeDirectory = async (directoryPath) => {
-  const currentDirectory = getCurrentDirectory();
-  const newDirectory = path.resolve(currentDirectory, directoryPath);
-
   try {
+    const currentDirectory = getCurrentDirectory();
+    const newDirectory = path.resolve(currentDirectory, directoryPath);
     const stats = await fs.stat(newDirectory);
     if (stats.isDirectory()) {
       process.chdir(newDirectory);
@@ -48,9 +47,8 @@ export const changeDirectory = async (directoryPath) => {
 };
 
 export const listDirectoryContents = async () => {
-  const currentDirectory = getCurrentDirectory();
-
   try {
+    const currentDirectory = getCurrentDirectory();
     const files = await fs.readdir(currentDirectory);
     files.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
 
