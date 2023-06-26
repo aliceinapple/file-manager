@@ -42,7 +42,7 @@ export const changeDirectory = async (directoryPath) => {
     } else {
       console.error(textColorRed + "Not a directory" + resetStyle);
     }
-  } catch (err) {
+  } catch (error) {
     console.error(textColorRed + "Invalid directory path" + resetStyle);
   }
 };
@@ -81,7 +81,7 @@ export const listDirectoryContents = async () => {
       const padding = " ".repeat(maxLength - file.name.length + 2);
       console.log(`${file.index}\t${file.name}${padding}\t${file.type}`);
     });
-  } catch (err) {
+  } catch (error) {
     console.error(
       textColorRed + "Failed to read directory contents" + resetStyle
     );

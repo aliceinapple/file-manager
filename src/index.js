@@ -18,36 +18,18 @@ import { calculateHash } from "./hash.js";
 import { compressFile, decompressFile } from "./zip.js";
 import {
   resetStyle,
-  textBold,
-  textColorBlue,
   textColorMagenta,
   textColorRed,
   textUnderline,
 } from "./textStyles.js";
+import { exitProgram, startProgram } from "./base.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
 
-const username = process.argv[2].replace("--username=", "");
-
-console.log(
-  textColorMagenta +
-    textBold +
-    `Welcome to the File Manager, ${username}!\n` +
-    resetStyle
-);
-
-const exitProgram = () => {
-  console.log(
-    textColorBlue +
-      textBold +
-      `\nThank you for using File Manager, ${username}, goodbye!` +
-      resetStyle
-  );
-  process.exit(0);
-};
+startProgram();
 
 const promptUser = () => {
   rl.prompt();
